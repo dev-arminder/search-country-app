@@ -8,7 +8,7 @@ const closeBtn = document.getElementById("close");
 
 //Fetching countries from an API
 async function getCountries() {
-  const res = await fetch("https://restcountries.eu/rest/v2/all");
+  const res = await fetch("https://restcountries.com/v3.1/all");
   const countries = await res.json();
   displayCountries(countries);
 }
@@ -20,10 +20,10 @@ function displayCountries(countries) {
     countryEl.classList.add("card");
     countryEl.innerHTML = `
             <div class="card-header">
-                <img src="${country.flag}" alt="${country.name}" />
+                <img src="${country.flags.png}" alt="${country.name.common}" />
             </div>
             <div class="card-body">
-                <h2 class="country-name">${country.name}</h2>
+                <h2 class="country-name">${country.name.official}</h2>
                 <p><strong>Population:</strong> ${country.population}</p>
                 <p class="country-region"><strong>Region:</strong> ${country.region}</p>
                 <p><strong>Capital:</strong> ${country.capital}</p>
@@ -45,12 +45,22 @@ getCountries();
 function showCountryDetails(country) {
   const modalBody = modal.querySelector(".modal-body");
   const modalImage = modal.querySelector("img");
-  modalImage.src = country.flag;
+  let langs = "";
+  let currencies = "";
+  for (let key in country.languages) {
+    langs += ` ${country.languages[key]}`;
+  }
+  for (let key in country.currencies) {
+    currencies += ` ${country.currencies[key].name}`;
+  }
+  console.log(country);
+
+  modalImage.src = country.flags.png;
   modalBody.innerHTML = `
-      <h2>${country.name}</h2>
+      <h2>${country.name.official}</h2>
       <p>
         <strong>Native Name:</strong>
-         ${country.nativeName}
+         ${country.name.common}
       </p>
       <p>
         <strong>Population:</strong>
@@ -70,15 +80,16 @@ function showCountryDetails(country) {
       </p>
       <p>
         <strong>Top Level Domain:</strong>
-        ${country.topLevelDomain[0]}
+        ${country.tld[0]}
       </p>
-      <p>
-        <strong>Currencies:</strong>
-        ${country.currencies[0].name}
-      </p>
+       <p>
+
+           <strong>Currencies:</strong>
+            ${currencies}
+      </p > 
       <p>
         <strong>Languages:</strong>
-        ${country.languages.map(language => language.name)}
+        ${langs}
       </p>
 
   `;
