@@ -35,7 +35,7 @@ function displayCountries(countries) {
 
       showCountryDetails(country);
     });
-
+    countryEl.classList.add("loaded");
     countriesEl.appendChild(countryEl);
   });
 }
